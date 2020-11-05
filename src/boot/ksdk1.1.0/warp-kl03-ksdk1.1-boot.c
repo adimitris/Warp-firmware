@@ -56,7 +56,7 @@
 #include "warp.h"
 
 
-//#define WARP_FRDMKL03
+#define WARP_FRDMKL03
 
 
 /*
@@ -84,6 +84,7 @@
 //#include "devISL23415.h"
 #else
 #	include "devMMA8451Q.h"
+#	include "devSSD1331.h"
 #endif
 
 
@@ -209,7 +210,7 @@ void					enableTPS82740B(uint16_t voltageMillivolts);
 void					setTPS82740CommonControlLines(uint16_t voltageMillivolts);
 void					printPinDirections(void);
 void					dumpProcessorState(void);
-void					repeatRegisterReadForDeviceAndAddress(WarpSensorDevice warpSensorDevice, uint8_t baseAddress, 
+void					repeatRegisterReadForDeviceAndAddress(WarpSensorDevice warpSensorDevice, uint8_t baseAddress,
 								uint8_t pullupValue, bool autoIncrement, int chunkReadsPerAddress, bool chatty,
 								int spinDelay, int repetitionsPerAddress, uint16_t sssupplyMillivolts,
 								uint16_t adaptiveSssupplyMaxMillivolts, uint8_t referenceByte);
@@ -1248,7 +1249,7 @@ main(void)
 #endif
 
 #ifdef WARP_BUILD_ENABLE_DEVMMA8451Q
-	initMMA8451Q(	0x1C	/* i2cAddress */,	&deviceMMA8451QState	);
+	initMMA8451Q(	0x1D	/* i2cAddress */,	&deviceMMA8451QState	);
 #endif
 
 #ifdef WARP_BUILD_ENABLE_DEVLPS25H
@@ -1353,6 +1354,8 @@ main(void)
 	 *	Notreached
 	 */
 #endif
+
+	devSSD1331init();
 
 	while (1)
 	{
@@ -1466,7 +1469,7 @@ main(void)
 		SEGGER_RTT_WriteString(0, "\rEnter selection> ");
 		OSA_TimeDelay(gWarpMenuPrintDelayMilliseconds);
 		key = SEGGER_RTT_WaitKey();
-		
+
 		switch (key)
 		{
 			/*
